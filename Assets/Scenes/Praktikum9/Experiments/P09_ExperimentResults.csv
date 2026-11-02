@@ -1,0 +1,53 @@
+﻿eksperimen,variasi,seed,safe_radius,min_spacing,bobot_enemy,enemy,item,legendary,gagal_spawn,posisi_ditolak,tolak_player,tolak_exit,tolak_spacing,tolak_obstacle,jenis_enemy,jenis_item,layout_hash
+Seed,Seed 100,100,5,1.5,60:30:10,8,15,1,0,5,1,2,1,1,"Grunt 6, Brute 1, Scout 1","Coin 4, Potion 6, Key 4, Legendary 1",F5BEA89B
+Seed,Seed 200,200,5,1.5,60:30:10,8,15,1,0,11,3,2,2,4,"Grunt 7, Brute 1, Scout 0","Coin 9, Potion 4, Key 1, Legendary 1",3F4109B1
+Seed,Seed 300,300,5,1.5,60:30:10,8,15,1,0,10,1,1,2,6,"Grunt 5, Brute 2, Scout 1","Coin 8, Potion 5, Key 1, Legendary 1",85A72B68
+Reproducibility,Run 1,500,5,1.5,60:30:10,8,15,1,0,8,1,1,3,3,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",62609F50
+Reproducibility,Run 2,500,5,1.5,60:30:10,8,15,1,0,8,1,1,3,3,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",62609F50
+Reproducibility,Run 3,500,5,1.5,60:30:10,8,15,1,0,8,1,1,3,3,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",62609F50
+Safe radius,3,500,3,1.5,60:30:10,8,15,1,0,7,0,1,3,3,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",087679C9
+Safe radius,5,500,5,1.5,60:30:10,8,15,1,0,8,1,1,3,3,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",62609F50
+Safe radius,8,500,8,1.5,60:30:10,8,15,1,0,11,4,1,3,3,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",C31CC9CA
+Min spacing,0.5,500,5,0.5,60:30:10,8,15,1,0,7,2,1,0,4,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",82FDF881
+Min spacing,1.5,500,5,1.5,60:30:10,8,15,1,0,8,1,1,3,3,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",62609F50
+Min spacing,3,500,5,3,60:30:10,8,15,1,0,18,1,1,13,3,"Grunt 2, Brute 6, Scout 0","Coin 6, Potion 5, Key 3, Legendary 1",35B62C72
+Bobot enemy,60:30:10 gen 1,1,5,1.5,60:30:10,8,15,1,0,1,1,0,0,0,"Grunt 4, Brute 3, Scout 1","Coin 9, Potion 5, Key 0, Legendary 1",6A662B04
+Bobot enemy,60:30:10 gen 2,2,5,1.5,60:30:10,8,15,1,0,10,1,1,3,5,"Grunt 3, Brute 4, Scout 1","Coin 6, Potion 8, Key 0, Legendary 1",BF9D6CAB
+Bobot enemy,60:30:10 gen 3,3,5,1.5,60:30:10,8,15,0,0,11,3,0,2,6,"Grunt 5, Brute 2, Scout 1","Coin 11, Potion 4, Key 0",B1E9847E
+Bobot enemy,60:30:10 gen 4,4,5,1.5,60:30:10,8,15,0,0,9,3,0,4,2,"Grunt 4, Brute 1, Scout 3","Coin 11, Potion 3, Key 1",7C3AA633
+Bobot enemy,60:30:10 gen 5,5,5,1.5,60:30:10,8,15,1,0,8,1,1,3,3,"Grunt 5, Brute 2, Scout 1","Coin 8, Potion 6, Key 0, Legendary 1",4C0BB3C8
+Bobot enemy,60:30:10 gen 6,6,5,1.5,60:30:10,8,15,1,0,11,2,0,5,4,"Grunt 4, Brute 4, Scout 0","Coin 7, Potion 3, Key 4, Legendary 1",BC5A6A4F
+Bobot enemy,60:30:10 gen 7,7,5,1.5,60:30:10,8,15,0,0,8,0,0,3,5,"Grunt 7, Brute 0, Scout 1","Coin 10, Potion 3, Key 2",29B27F5F
+Bobot enemy,60:30:10 gen 8,8,5,1.5,60:30:10,8,15,1,0,2,1,0,0,1,"Grunt 3, Brute 4, Scout 1","Coin 9, Potion 4, Key 1, Legendary 1",F7A173EB
+Bobot enemy,60:30:10 gen 9,9,5,1.5,60:30:10,8,15,1,0,15,4,3,2,6,"Grunt 4, Brute 4, Scout 0","Coin 8, Potion 5, Key 1, Legendary 1",1AFECC99
+Bobot enemy,60:30:10 gen 10,10,5,1.5,60:30:10,8,15,1,0,9,1,0,1,7,"Grunt 7, Brute 0, Scout 1","Coin 9, Potion 3, Key 2, Legendary 1",516AB55B
+Bobot enemy,60:30:10 gen 11,11,5,1.5,60:30:10,8,15,1,0,4,1,0,1,2,"Grunt 2, Brute 4, Scout 2","Coin 7, Potion 7, Key 0, Legendary 1",B0BF9494
+Bobot enemy,60:30:10 gen 12,12,5,1.5,60:30:10,8,15,0,0,3,0,0,2,1,"Grunt 5, Brute 3, Scout 0","Coin 9, Potion 6, Key 0",1D7A7AB2
+Bobot enemy,60:30:10 gen 13,13,5,1.5,60:30:10,8,15,1,0,12,3,2,2,5,"Grunt 3, Brute 4, Scout 1","Coin 9, Potion 2, Key 3, Legendary 1",EDB6B729
+Bobot enemy,60:30:10 gen 14,14,5,1.5,60:30:10,8,15,1,0,7,4,0,0,3,"Grunt 6, Brute 1, Scout 1","Coin 8, Potion 4, Key 2, Legendary 1",715881F1
+Bobot enemy,60:30:10 gen 15,15,5,1.5,60:30:10,8,15,0,0,10,2,0,1,7,"Grunt 5, Brute 2, Scout 1","Coin 10, Potion 4, Key 1",1CD0278E
+Bobot enemy,60:30:10 gen 16,16,5,1.5,60:30:10,8,15,1,0,8,0,2,3,3,"Grunt 4, Brute 1, Scout 3","Coin 8, Potion 3, Key 3, Legendary 1",324AE245
+Bobot enemy,60:30:10 gen 17,17,5,1.5,60:30:10,8,15,1,0,14,4,2,0,8,"Grunt 5, Brute 3, Scout 0","Coin 7, Potion 7, Key 0, Legendary 1",CBB0B571
+Bobot enemy,60:30:10 gen 18,18,5,1.5,60:30:10,8,15,1,0,10,4,0,1,5,"Grunt 5, Brute 3, Scout 0","Coin 7, Potion 5, Key 2, Legendary 1",1D01CB40
+Bobot enemy,60:30:10 gen 19,19,5,1.5,60:30:10,8,15,1,0,13,3,1,0,9,"Grunt 4, Brute 4, Scout 0","Coin 8, Potion 6, Key 0, Legendary 1",6B6D05D0
+Bobot enemy,60:30:10 gen 20,20,5,1.5,60:30:10,8,15,1,0,6,2,0,1,3,"Grunt 7, Brute 0, Scout 1","Coin 8, Potion 5, Key 1, Legendary 1",2786799D
+Bobot enemy,33:33:34 gen 1,1,5,1.5,33:33:34,8,15,1,0,1,1,0,0,0,"Grunt 1, Brute 3, Scout 4","Coin 9, Potion 5, Key 0, Legendary 1",FFFCC072
+Bobot enemy,33:33:34 gen 2,2,5,1.5,33:33:34,8,15,1,0,10,1,1,3,5,"Grunt 1, Brute 3, Scout 4","Coin 6, Potion 8, Key 0, Legendary 1",B8856AB4
+Bobot enemy,33:33:34 gen 3,3,5,1.5,33:33:34,8,15,0,0,11,3,0,2,6,"Grunt 4, Brute 1, Scout 3","Coin 11, Potion 4, Key 0",9064EE83
+Bobot enemy,33:33:34 gen 4,4,5,1.5,33:33:34,8,15,0,0,9,3,0,4,2,"Grunt 2, Brute 2, Scout 4","Coin 11, Potion 3, Key 1",BAF4FDE0
+Bobot enemy,33:33:34 gen 5,5,5,1.5,33:33:34,8,15,1,0,8,1,1,3,3,"Grunt 3, Brute 3, Scout 2","Coin 8, Potion 6, Key 0, Legendary 1",39D63797
+Bobot enemy,33:33:34 gen 6,6,5,1.5,33:33:34,8,15,1,0,11,2,0,5,4,"Grunt 3, Brute 2, Scout 3","Coin 7, Potion 3, Key 4, Legendary 1",AC9E64D9
+Bobot enemy,33:33:34 gen 7,7,5,1.5,33:33:34,8,15,0,0,8,0,0,3,5,"Grunt 4, Brute 3, Scout 1","Coin 10, Potion 3, Key 2",1F79E176
+Bobot enemy,33:33:34 gen 8,8,5,1.5,33:33:34,8,15,1,0,2,1,0,0,1,"Grunt 2, Brute 1, Scout 5","Coin 9, Potion 4, Key 1, Legendary 1",189A3976
+Bobot enemy,33:33:34 gen 9,9,5,1.5,33:33:34,8,15,1,0,15,4,3,2,6,"Grunt 2, Brute 3, Scout 3","Coin 8, Potion 5, Key 1, Legendary 1",456C5CF2
+Bobot enemy,33:33:34 gen 10,10,5,1.5,33:33:34,8,15,1,0,9,1,0,1,7,"Grunt 1, Brute 6, Scout 1","Coin 9, Potion 3, Key 2, Legendary 1",905B28A3
+Bobot enemy,33:33:34 gen 11,11,5,1.5,33:33:34,8,15,1,0,4,1,0,1,2,"Grunt 2, Brute 0, Scout 6","Coin 7, Potion 7, Key 0, Legendary 1",5A4AC038
+Bobot enemy,33:33:34 gen 12,12,5,1.5,33:33:34,8,15,0,0,3,0,0,2,1,"Grunt 2, Brute 5, Scout 1","Coin 9, Potion 6, Key 0",D0C2B440
+Bobot enemy,33:33:34 gen 13,13,5,1.5,33:33:34,8,15,1,0,12,3,2,2,5,"Grunt 3, Brute 0, Scout 5","Coin 9, Potion 2, Key 3, Legendary 1",4C29A079
+Bobot enemy,33:33:34 gen 14,14,5,1.5,33:33:34,8,15,1,0,7,4,0,0,3,"Grunt 3, Brute 3, Scout 2","Coin 8, Potion 4, Key 2, Legendary 1",BEDC4D97
+Bobot enemy,33:33:34 gen 15,15,5,1.5,33:33:34,8,15,0,0,10,2,0,1,7,"Grunt 3, Brute 2, Scout 3","Coin 10, Potion 4, Key 1",B38D1996
+Bobot enemy,33:33:34 gen 16,16,5,1.5,33:33:34,8,15,1,0,8,0,2,3,3,"Grunt 3, Brute 1, Scout 4","Coin 8, Potion 3, Key 3, Legendary 1",D177F47F
+Bobot enemy,33:33:34 gen 17,17,5,1.5,33:33:34,8,15,1,0,14,4,2,0,8,"Grunt 3, Brute 3, Scout 2","Coin 7, Potion 7, Key 0, Legendary 1",295A3771
+Bobot enemy,33:33:34 gen 18,18,5,1.5,33:33:34,8,15,1,0,10,4,0,1,5,"Grunt 2, Brute 4, Scout 2","Coin 7, Potion 5, Key 2, Legendary 1",1672AF99
+Bobot enemy,33:33:34 gen 19,19,5,1.5,33:33:34,8,15,1,0,13,3,1,0,9,"Grunt 1, Brute 4, Scout 3","Coin 8, Potion 6, Key 0, Legendary 1",9F26E4EA
+Bobot enemy,33:33:34 gen 20,20,5,1.5,33:33:34,8,15,1,0,6,2,0,1,3,"Grunt 3, Brute 4, Scout 1","Coin 8, Potion 5, Key 1, Legendary 1",3A4451E5

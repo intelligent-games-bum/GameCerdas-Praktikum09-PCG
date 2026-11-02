@@ -3,8 +3,9 @@
 # Intelligent Games Labs
 
 The lab work for the Intelligent Games course, one Unity project that grows with each lab.
-The newest is a skeleton driven by a finite state machine: it patrols, hunts you by sight,
-fights, runs for safety when it is hurt, and dies.
+The newest is a procedural spawner: it fills the arena with enemies and items from a seed,
+so every layout is random but can be replayed exactly. The enemies it spawns run the
+behavior tree from lab 6, and you win by collecting every item and reaching the exit.
 
 ![Unity](https://img.shields.io/badge/Unity-6.3%20LTS-000000?logo=unity)
 ![URP](https://img.shields.io/badge/Render-URP-2196F3)
@@ -12,6 +13,8 @@ fights, runs for safety when it is hurt, and dies.
 ![Input System](https://img.shields.io/badge/Input%20System-New-orange)
 ![AI Navigation](https://img.shields.io/badge/AI%20Navigation-2.0-4CAF50)
 ![FSM](https://img.shields.io/badge/AI-Finite%20State%20Machine-E91E63)
+![Behavior Tree](https://img.shields.io/badge/AI-Behavior%20Tree-9C27B0)
+![PCG](https://img.shields.io/badge/PCG-Seeded%20Spawner-FF9800)
 
 </div>
 
@@ -25,12 +28,262 @@ fights, runs for safety when it is hurt, and dies.
 | 4 | `Assets/Scenes/Praktikum4/P4A_AStarGrid.unity` | A* written by hand on a grid, with the open and closed sets drawn on the floor |
 | 4 | `Assets/Scenes/Praktikum4/P4B_NavMeshChase.unity` | NavMesh chasing, repathing, and `NavMeshObstacle` carving |
 | 5 | `Assets/Scenes/Praktikum5/Praktikum05_FSM.unity` | Enemy AI as a finite state machine |
+| 6 | `Assets/Scenes/Praktikum6/P06_BehaviorTree.unity` | Enemy AI as a behavior tree, compared with utility AI |
+| 9 | `Assets/Scenes/Praktikum9/P09_PCG_SmartSpawner.unity` | Procedural content generation: a seeded, weighted, validated spawner |
 
 ## Running it from source
 
 Clone the repo and open the folder with Unity 6.3 LTS. Unity rebuilds the `Library` folder on first launch, which takes a few minutes. Open any scene from the table above and press Play.
 
-The scenes for labs 4 and 5 are generated. The **Praktikum 4** and **Praktikum 5** menus in the editor rebuild them from scratch and bake their NavMesh, so a scene broken by an experiment is one click from new. Rebuilding overwrites the scene file, including anything you changed in it by hand.
+The scenes for labs 4 to 9 are generated. The **Praktikum 4**, **Praktikum 5**, **Praktikum 6** and **Praktikum 9** menus in the editor rebuild them from scratch and bake their NavMesh, so a scene broken by an experiment is one click from new. Rebuilding overwrites the scene file, including anything you changed in it by hand.
+
+---
+
+## Lab 9: Procedural content generation, the smart spawner
+
+Enemies and items are no longer placed by hand. Every time the scene starts, a spawner picks their types and positions from a seed. The same seed in the same arena always gives the same layout, and a different seed gives a different one. The arena, obstacles, player, exit, waypoints and safe points are fixed. Only what the spawner creates changes. Rebuild the scene from **Praktikum 9 → Build Scene - PCG Smart Spawner**.
+
+The spawned enemies are the lab 6 behavior tree enemies, in three types. Your goal: pick up every item, then walk into the exit. The exit stays red until the last item is taken.
+
+### Controls
+
+| Input | Action |
+|---|---|
+| WASD | Walk |
+| Mouse | Orbit the camera |
+| Left click | Strike whatever stands just in front of you |
+| R | Regenerate with the same seed (also restarts after you lose) |
+| N | Regenerate with a random seed |
+| Esc | Free the cursor so you can press the HUD buttons |
+
+The HUD buttons are **Regenerate (R)**, **Seed Acak (N)**, **Seed -1**, **Seed +1** and **Run Experiments**. They react when the mouse button goes down, because the camera grabs the cursor again on the same click.
+
+### How a layout is generated
+
+[`SpawnGenerator.cs`](Assets/Scripts/Praktikum9/SpawnGenerator.cs) does all the work and creates no objects. It returns a plan, which [`SmartSpawner.cs`](Assets/Scripts/Praktikum9/SmartSpawner.cs) then instantiates. For each enemy, then each item:
+
+1. **Weighted random type.** Draw `r` in `[0, total weight)` and subtract the weights one by one until `r` drops below zero. With weights 60:30:10, the first type comes up 60% of the time.
+2. **Random position** inside the spawn area (36 × 36 m, centred on the spawner).
+3. **Validation**, cheapest check first:
+   - at least `playerSafeRadius` from the player,
+   - outside the exit's keep-out circle,
+   - at least `minSpacing` from everything already placed,
+   - no obstacle inside a capsule of radius `obstacleClearance` (`Physics.CheckCapsule` on the Obstacle layer).
+4. A rejected position is redrawn, up to `maxAttempts` times. When the attempts run out, the object is skipped and counted as a failed spawn.
+
+Each concern draws from its own `System.Random`, all derived from the seed: position, type, rotation and legendary. Turning random rotation off therefore does not move anything. `UnityEngine.Random` is never used for generation, because other scripts share it and would shift the sequence.
+
+Enemies are instantiated under an inactive parent first. A prefab cannot reference the player, waypoints or safe points in the scene, so the spawner fills them in (`EnemyPerception.SetTarget`, `EnemyBrain.SetRoute`) before the enemy wakes up. Only then does it move the enemy to the active parent.
+
+All parameters sit on **PCG Systems → Smart Spawner** in the Inspector: seed, enemy and item counts, area size, safe radius, spacing, clearance, max attempts, type weights, and the legendary settings.
+
+### What gets spawned
+
+| Kind | Type | Weight | Notes |
+|---|---|---|---|
+| Enemy | Grunt (skeleton) | 60 | 100 HP, balanced |
+| Enemy | Brute (charred) | 30 | 160 HP, bigger, slow, hits hard |
+| Enemy | Scout (robot) | 10 | 60 HP, small, fast, flees early |
+| Item | Coin | 60 | +10 score |
+| Item | Potion | 30 | +5 score, heals 30 HP |
+| Item | Key | 10 | +25 score |
+| Item | Legendary chest | 8% per item, at most 1 | +100 score, heals 50 HP, glows, only 12 m or more from the player |
+
+### Development features
+
+| Feature | Where |
+|---|---|
+| Random rotation | Every object gets a random Y rotation from its own random stream. Toggle it with `randomRotation`. |
+| Object type statistics | The HUD lists how many of each enemy and item type were spawned, the target percentage, and how many of each you have collected. |
+| Regenerate UI buttons | Same seed, random seed, seed −1 or +1, and run the experiments, all without the keyboard. |
+| Legendary item | A rare glowing chest. It has its own chance, its own cap, and a larger safe distance, so it is always a detour. |
+
+There is also a small seed history in the HUD.
+
+### Debug view
+
+The HUD shows the seed, a layout hash, enemies and items spawned out of those requested, failed spawns, and rejected positions split by reason (player, exit, spacing, obstacle). Every generation is also logged to the Console.
+
+Gizmos in the Scene view:
+
+- yellow box: the spawn area,
+- green disc: the player's safe zone,
+- orange ring: the legendary minimum distance,
+- red ring: the exit keep-out.
+
+In Play mode the Scene view also shows each spawned object with a ring of half the minimum spacing, and a small red cube wherever a candidate position was rejected.
+
+### Experiments
+
+**PCG Systems → Experiment Runner** runs every test from the assignment in one go, either in Play mode (the **Run Experiments** button) or in Edit mode (**Praktikum 9 → Run Experiments**). It only plans layouts and creates nothing. Results go to the Console and to [`Assets/Scenes/Praktikum9/Experiments`](Assets/Scenes/Praktikum9/Experiments) as `P09_ExperimentResults.csv` and `.md`.
+
+The base settings for every run are 8 enemies, 15 items, a 36 × 36 m area, safe radius 5, spacing 1.5, 30 max attempts and enemy weights 60:30:10. Each test changes only one of them. "Rejected" counts candidate positions that failed validation. "Failed" counts objects that ran out of attempts.
+
+**1. Different seeds**
+
+| Seed | Enemy | Item | Failed | Rejected (player / exit / spacing / obstacle) | Enemy types | Item types | Layout hash |
+|---|---|---|---|---|---|---|---|
+| 100 | 8/8 | 15/15 | 0 | 5 (1 / 2 / 1 / 1) | Grunt 6, Brute 1, Scout 1 | Coin 4, Potion 6, Key 4, Legendary 1 | `F5BEA89B` |
+| 200 | 8/8 | 15/15 | 0 | 11 (3 / 2 / 2 / 4) | Grunt 7, Brute 1, Scout 0 | Coin 9, Potion 4, Key 1, Legendary 1 | `3F4109B1` |
+| 300 | 8/8 | 15/15 | 0 | 10 (1 / 1 / 2 / 6) | Grunt 5, Brute 2, Scout 1 | Coin 8, Potion 5, Key 1, Legendary 1 | `85A72B68` |
+
+Each seed gives a different layout and a different mix of types. All three still fill every slot.
+
+**2. Reproducibility, seed 500 three times**
+
+| Run | Enemy | Item | Rejected | Enemy types | Layout hash |
+|---|---|---|---|---|---|
+| 1 | 8/8 | 15/15 | 8 | Grunt 2, Brute 6, Scout 0 | `62609F50` |
+| 2 | 8/8 | 15/15 | 8 | Grunt 2, Brute 6, Scout 0 | `62609F50` |
+| 3 | 8/8 | 15/15 | 8 | Grunt 2, Brute 6, Scout 0 | `62609F50` |
+
+The hashes match, so all three layouts are identical, down to positions and rotations. This holds only while the arena and the player's start position stay the same, which is why the spawner puts the player back at the start before each generation.
+
+**3. Player safe radius, seed 500**
+
+| Safe radius | Enemy | Item | Failed | Rejected near player | Rejected total |
+|---|---|---|---|---|---|
+| 3 | 8/8 | 15/15 | 0 | 0 | 7 |
+| 5 | 8/8 | 15/15 | 0 | 1 | 8 |
+| 8 | 8/8 | 15/15 | 0 | 4 | 11 |
+
+A bigger safe radius rejects more positions near the player and pushes everything outward. The layout changes, but the types do not, because types come from their own random stream. The arena is large compared with an 8 m circle, so nothing fails to spawn.
+
+**4. Minimum spacing, seed 500**
+
+| Min spacing | Enemy | Item | Failed | Rejected for spacing | Rejected total |
+|---|---|---|---|---|---|
+| 0.5 | 8/8 | 15/15 | 0 | 0 | 7 |
+| 1.5 | 8/8 | 15/15 | 0 | 3 | 8 |
+| 3 | 8/8 | 15/15 | 0 | 13 | 18 |
+
+Spacing has the strongest effect of any parameter: going from 1.5 to 3 more than doubles the rejected positions, and objects spread out more evenly. With more objects or a smaller area, the attempts would start running out and the failed count would rise.
+
+**5. Enemy weights, 20 generations (seeds 1 to 20, 160 enemies)**
+
+| Weights | Grunt | Brute | Scout |
+|---|---|---|---|
+| 60:30:10 | 92 (57.5%, target 60%) | 49 (30.6%, target 30%) | 19 (11.9%, target 10%) |
+| 33:33:34 | 48 (30.0%, target 33%) | 53 (33.1%, target 33%) | 59 (36.9%, target 34%) |
+
+Over many generations, the share of each type lands within about 3 points of its weight. A single generation can stray far: seed 500 rolled 2 Grunts and 6 Brutes under 60:30:10. Weights set a probability, not a quota. Changing the weights leaves the positions alone, so the rejected counts are the same for both rows.
+
+### Scripts
+
+| File | Role |
+|---|---|
+| [`SpawnGenerator.cs`](Assets/Scripts/Praktikum9/SpawnGenerator.cs) | `SpawnConfig`, `SpawnEntry`, weighted pick, position validation, `SpawnReport` with the layout hash |
+| [`SmartSpawner.cs`](Assets/Scripts/Praktikum9/SmartSpawner.cs) | Instantiates the plan, wires spawned enemies to the scene, R and N keys, Gizmos |
+| [`SpawnExperimentRunner.cs`](Assets/Scripts/Praktikum9/SpawnExperimentRunner.cs) | Runs the five tests, writes CSV and Markdown |
+| [`SpawnerHUD.cs`](Assets/Scripts/Praktikum9/SpawnerHUD.cs) | uGUI debug panel, type statistics, buttons, win and lose banner |
+| [`HudPressButton.cs`](Assets/Scripts/Praktikum9/HudPressButton.cs) | A button that fires on press, so it works with the locked camera cursor |
+| [`Collectible.cs`](Assets/Scripts/Praktikum9/Collectible.cs) | Item pickup by distance, score, healing, bobbing and glow |
+| [`P9GameGoal.cs`](Assets/Scripts/Praktikum9/P9GameGoal.cs) | Collect everything, then reach the exit. Lose when your health runs out |
+| [`ExitGate.cs`](Assets/Scripts/Praktikum9/ExitGate.cs) | Exit pad, red while locked and green once open |
+| [`Editor/Praktikum9SceneBuilder.cs`](Assets/Scripts/Praktikum9/Editor/Praktikum9SceneBuilder.cs) | Builds the arena, the seven prefabs and three personalities, and bakes the NavMesh |
+
+The lab 6 enemy animator is reused from `Assets/Scenes/Praktikum6/Animation/EnemyBT.controller`. Build the lab 6 scene once first, or the spawned enemies will slide around without animating.
+
+---
+
+## Lab 6: Enemy behavior tree
+
+The skeleton from lab 5, with its state machine swapped for a behavior tree. The arena, waypoints and safe points are the same. Rebuild the scene from **Praktikum 6 → Build Scene - Behavior Tree AI**.
+
+### Controls
+
+| Input | Action |
+|---|---|
+| WASD | Walk |
+| Mouse | Orbit the camera |
+| Left click | Strike whatever stands just in front of you, 20 damage |
+| M | Switch the enemy between behavior tree and utility AI |
+| 1, 2, 3 | Personality: Balanced, Aggressive, Coward |
+| K | Wound the enemy by 15 |
+| L | Kill the enemy outright |
+| H | Restore your health |
+| Tab | Hide or show the debug panels |
+| R | Restart the scene |
+
+### The tree
+
+```
+Root Selector
+├── Flee Sequence     Health Low? → Flee
+├── Attack Sequence   Can See Player? → In Attack Range? → Attack Or Wait
+│                                                         ├── Cooldown → Attack
+│                                                         └── Wait Cooldown
+├── Chase Sequence    Can See Player? → Chase
+├── Search Sequence   Has Last Seen? → Search Last Seen
+└── Patrol
+```
+
+The tree is evaluated from the root every frame, so the first child of the root selector that does not fail wins. That order is the priority: Flee, then Attack, then Chase, then Search, then Patrol. A wounded skeleton runs even with you standing in front of it, because the flee branch is checked before the attack branch ever gets a turn.
+
+The cooldown decorator fails while it is cooling down and does not run its child at all, so a hit lands at most once per cooldown. Without the `Wait Cooldown` fallback, that failure would drop the skeleton into the chase branch between hits and it would walk into you. With it, the skeleton holds its ground and keeps facing you.
+
+Search is the bonus branch. When the skeleton loses you, it walks to where it last saw you and turns on the spot for a few seconds before it goes back to patrolling. A hit from behind gives it the same clue.
+
+The framework lives in [`Assets/Scripts/Praktikum6/BehaviorTree`](Assets/Scripts/Praktikum6/BehaviorTree): `BTNode`, `SelectorNode`, `SequenceNode`, `ConditionNode`, `ActionNode`, `DecoratorNode` and `CooldownDecorator`. The tree itself is built in `EnemyBrain.BuildTree`.
+
+### Utility AI
+
+[`UtilityScoring.cs`](Assets/Scripts/Praktikum6/UtilityScoring.cs) gives every action a score from 0 to 1 each frame, and the highest score wins. The scores are always computed, so the top-right panel shows what utility AI would pick next to what the tree actually picked. Press M and the utility scores take over, running the very same action nodes.
+
+| Action | Score |
+|---|---|
+| Flee | 0.9 to 1 at or below the flee threshold, falling off steeply as health rises above it |
+| Attack | 0.9 when you are seen and in range, scaled down to 60% as its own health drops |
+| Chase | 0.55 to 0.8 when you are seen, higher the further away you are |
+| Search | 0.4 while it has a last seen position to check |
+| Patrol | 0.1, always |
+
+Each score is then multiplied by the personality's weight, and the action already running gets a small bonus so the choice does not flicker. The two methods disagree in interesting places. An Aggressive skeleton at 10% health with you in reach scores Attack 0.77 against Flee 0.65 and keeps swinging, while the tree, with the same numbers, always flees.
+
+### Personalities
+
+| | Balanced | Aggressive | Coward |
+|---|---|---|---|
+| Flees at | 30% | 15% | 50% |
+| Chase speed | 4.5 | 5.5 | 3.5 |
+| Attack cooldown | 1.5 s | 1 s | 2 s |
+| Search time | 4 s | 6 s | 2 s |
+| Utility weights (attack, chase, flee) | 1, 1, 1 | 1.25, 1.2, 0.7 | 0.8, 0.75, 1.3 |
+
+They are ScriptableObjects in `Assets/Scenes/Praktikum6/Personalities`. The tree stays the same; only its thresholds and the utility weights change.
+
+### Reading it while it runs
+
+| Where | What you see |
+|---|---|
+| Top-left panel | Current action, mode, personality, both health bars, the perception checks and the attack cooldown |
+| Tree panel below it | The whole tree, live. Green for Success, yellow for Running, red for Failure, grey for nodes not reached this frame |
+| Top-right panel | The utility score of every action, and whether the tree and utility AI agree |
+| Inspector, on `Enemy_Skeleton (Behavior Tree)` | `Current Action`, `Previous Action`, `Active Branch` and the utility scores |
+| Console | One colour-coded line per action change with the reason, plus a line for every hit |
+| Over each head | A health bar that faces the camera. A white trail shows the last hit, and a blue tick on the enemy's bar marks its flee threshold |
+| Ball over the skeleton | Green Patrol, yellow Chase, red Attack, purple Search, blue Flee |
+
+The gizmos are the same as lab 5, plus a purple cross on the last seen position while the skeleton is searching.
+
+### Animation
+
+The skeleton still borrows the Supersoldier's Idle and Running clips. The scene builder also generates an attack clip from Humanoid muscle curves, a wind-up and a straight punch with the right arm, and plays it on an upper-body layer masked to the torso and right arm, so the legs keep walking while the arm swings. `EnemyBrainVisual` sets the `Speed`, `Attack` and `Action` parameters.
+
+### Scripts
+
+| File | Job |
+|---|---|
+| `BehaviorTree/*.cs` | The behavior tree framework |
+| `EnemyBrain.cs` | Builds the tree, runs it or the utility AI, and holds the actions |
+| `UtilityScoring.cs` | The utility scores |
+| `EnemyPersonality.cs` | The personality asset |
+| `EnemyBrainVisual.cs` | Animator parameters, the action ball, the lunge and the fall |
+| `WorldHealthBar.cs` | The health bars over each head |
+| `BTDebuggerHUD.cs` | The panels, the tree view and the test keys |
+| `Editor/Praktikum6SceneBuilder.cs` | Builds the scene, the personalities, the animator and the NavMesh |
+
+Perception, health, safe points and the player's strike are reused from lab 5.
 
 ---
 
@@ -130,13 +383,7 @@ The Synty skeleton ships without animations. Its rig is Humanoid, so it borrows 
 A farmhand that finds its way around the island with no map at all,
 sharing it with a guard who hunts you by sight and loses you when you break cover.
 
-**[Play it in your browser](https://play.unity.com/en/games/e2cd4937-3be9-4cda-90f3-91a958a63660/web)**
-
-![Video demo](public/demo-video.gif)
-
 ### Controls
-
-Click the game window once before you start. Browsers hand over the mouse cursor after a click, so the camera will not respond until you give it one.
 
 | Input | On the ground | In flight |
 |---|---|---|

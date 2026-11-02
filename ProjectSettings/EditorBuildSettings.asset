@@ -20,6 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Praktikum5/Praktikum05_FSM.unity
     guid: 1520d7654552857439c883ed17693658
+  - enabled: 1
+    path: Assets/Scenes/Praktikum6/P06_BehaviorTree.unity
+    guid: 187db3a44dc328b4796af121f2d6bf65
+  - enabled: 1
+    path: Assets/Scenes/Praktikum9/P09_PCG_SmartSpawner.unity
+    guid: f607b85c4511b6c4eb83dc45b365a38c
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
