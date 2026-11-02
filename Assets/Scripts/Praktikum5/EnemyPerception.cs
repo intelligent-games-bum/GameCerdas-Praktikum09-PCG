@@ -34,6 +34,9 @@ public class EnemyPerception : MonoBehaviour
 
     public Transform Target => target;
     public bool CanSeeTarget => canSeeTarget;
+    public bool InRange => inRange;
+    public bool InFieldOfView => inFieldOfView;
+    public bool HasLineOfSight => hasLineOfSight;
     public Vector3 LastKnownPosition { get; private set; }
     public float TimeSinceLastSeen { get; private set; } = float.PositiveInfinity;
     public float ViewRange => viewRange;
@@ -46,6 +49,13 @@ public class EnemyPerception : MonoBehaviour
     {
         if (target != null)
             targetHealth = target.GetComponent<Health>();
+    }
+
+    /// <summary>Dipakai spawner (Praktikum 9): prefab tidak bisa menyimpan referensi ke Player di scene.</summary>
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+        targetHealth = target != null ? target.GetComponent<Health>() : null;
     }
 
     private void Update()
